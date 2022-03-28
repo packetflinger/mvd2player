@@ -74,7 +74,8 @@ func main() {
 	iferr(err)
 
 	// linux doesn't like not being in the same directory as q2
-	_ = os.Chdir(fmt.Sprintf("%s%s%s", config.Q2exe, sep, ".."))
+	err = os.Chdir(fmt.Sprintf("%s%s%s", config.Q2exe, sep, ".."))
+	iferr(err)
 
 	// spawn a q2pro process to start playing the demo, block until completed
 	cmd := exec.Command(config.Q2exe, "+exec", "tempdemo.cfg")
