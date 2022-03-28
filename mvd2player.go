@@ -46,7 +46,7 @@ func main() {
 		return
 	}
 
-	mvd := strings.Contains(".mvd2", os.Args[1])
+	mvd := strings.Contains(os.Args[1], ".mvd2")
 	var demoname, cfg, cfgname string
 
 	// copy the demo the right place
@@ -73,9 +73,13 @@ func main() {
 	err = os.WriteFile(cfgname, []byte(cfg), 0666)
 	iferr(err)
 
+	// linux doesn't like not being in the same directory as q2
+	_ = os.Chdir(fmt.Sprintf("%s%s%s", config.Q2exe, sep, ".."))
+
 	// spawn a q2pro process to start playing the demo, block until completed
 	cmd := exec.Command(config.Q2exe, "+exec", "tempdemo.cfg")
-	_ = cmd.Run()
+	err = cmd.Run()
+	iferr(err)
 
 	// remove temp demo and config
 	err = os.Remove(demoname)
