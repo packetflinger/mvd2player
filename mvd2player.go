@@ -12,8 +12,8 @@ import (
 )
 
 type Config struct {
-	Baseq2 string `json:"baseq2folder"`
-	Q2exe  string `json:"q2binary"`
+	Q2dir string `json:"q2folder"`
+	Q2exe string `json:"q2binary"`
 }
 
 func main() {
@@ -51,9 +51,9 @@ func main() {
 
 	// copy the demo the right place
 	if mvd {
-		demoname = fmt.Sprintf("%s%s%s%stempdemo.mvd2", config.Baseq2, sep, "demos", sep)
+		demoname = fmt.Sprintf("%s%s%s%s%s%stempdemo.mvd2", config.Q2dir, sep, "baseq2", sep, "demos", sep)
 	} else {
-		demoname = fmt.Sprintf("%s%s%s%stempdemo.dm2", config.Baseq2, sep, "demos", sep)
+		demoname = fmt.Sprintf("%s%s%s%s%s%stempdemo.dm2", config.Q2dir, sep, "baseq2", sep, "demos", sep)
 	}
 
 	// "copy" demo to a temp file in the right location
@@ -69,12 +69,12 @@ func main() {
 		cfg = "alias loopdemo \"disconnect; demo tempdemo; set nextserver loopdemo\"; loopdemo"
 	}
 
-	cfgname = fmt.Sprintf("%s%stempdemo.cfg", config.Baseq2, sep)
+	cfgname = fmt.Sprintf("%s%s%s%stempdemo.cfg", config.Q2dir, sep, "baseq2", sep)
 	err = os.WriteFile(cfgname, []byte(cfg), 0666)
 	iferr(err)
 
 	// linux doesn't like not being in the same directory as q2
-	err = os.Chdir(fmt.Sprintf("%s%s%s", config.Q2exe, sep, ".."))
+	err = os.Chdir(config.Q2dir)
 	iferr(err)
 
 	// spawn a q2pro process to start playing the demo, block until completed
