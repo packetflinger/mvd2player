@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
+	"strings"
 )
 
 type Config struct {
@@ -20,7 +21,7 @@ func main() {
 	iferr(err)
 
 	sep := string(os.PathSeparator)
-	configfile := fmt.Sprintf("%s%smvd2player.json", user.HomeDir, sep)
+	configfile := fmt.Sprintf("%s%sq2demoplayer.json", user.HomeDir, sep)
 
 	configbody, err := os.ReadFile(configfile)
 	if err != nil {
@@ -45,8 +46,15 @@ func main() {
 		return
 	}
 
+	mvd := strings.Contains(".mvd2", os.Args[1])
+	var demoname, cfg, cfgname string
+
 	// copy the demo the right place
-	demoname := fmt.Sprintf("%s%s%s%stempdemo.mvd2", config.Baseq2, sep, "demos", sep)
+	if mvd {
+		demoname = fmt.Sprintf("%s%s%s%stempdemo.mvd2", config.Baseq2, sep, "demos", sep)
+	} else {
+		demoname = fmt.Sprintf("%s%s%s%stempdemo.dm2", config.Baseq2, sep, "demos", sep)
+	}
 
 	// "copy" demo to a temp file in the right location
 	demosrc, err := os.ReadFile(os.Args[1])
@@ -55,13 +63,18 @@ func main() {
 	iferr(err)
 
 	// make a temporary config and write it to baseq2 folder
-	cfg := "alias loopdemo \"disconnect; mvdplay tempdemo; set nextserver loopdemo\"; loopdemo"
-	cfgname := fmt.Sprintf("%s%stempmvd.cfg", config.Baseq2, sep)
+	if mvd {
+		cfg = "alias loopdemo \"disconnect; mvdplay tempdemo; set nextserver loopdemo\"; loopdemo"
+	} else {
+		cfg = "alias loopdemo \"disconnect; demo tempdemo; set nextserver loopdemo\"; loopdemo"
+	}
+
+	cfgname = fmt.Sprintf("%s%stempdemo.cfg", config.Baseq2, sep)
 	err = os.WriteFile(cfgname, []byte(cfg), 0666)
 	iferr(err)
 
 	// spawn a q2pro process to start playing the demo, block until completed
-	cmd := exec.Command(config.Q2exe, "+exec", "tempmvd.cfg")
+	cmd := exec.Command(config.Q2exe, "+exec", "tempdemo.cfg")
 	_ = cmd.Run()
 
 	// remove temp demo and config
