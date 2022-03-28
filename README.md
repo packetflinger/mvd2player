@@ -11,7 +11,7 @@ Example config:
 ```
 {
     "baseq2folder": "c:/q2/baseq2",
-    "q2binary": "c:/q2/q2pro.exe
+    "q2binary": "c:/q2/q2pro.exe"
 }
 ```
 
