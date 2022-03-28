@@ -27,8 +27,8 @@ func main() {
 	if err != nil {
 		fmt.Printf("Problems loading config file: %s\n", configfile)
 		fmt.Println("Please make sure you create that file and add your config like:")
-		fmt.Printf("{\n  \"baseq2folder\": \"c:/q2/baseq2\",\n")
-		fmt.Printf("  \"q2binary\": \"c:/q2/q2pro.exe\"\n}\n")
+		fmt.Printf("{\n  \"q2folder\": \"c:/q2/baseq2\",\n")
+		fmt.Printf("  \"q2binary\": \"q2pro.exe\"\n}\n")
 		fmt.Printf("\n\nPress ENTER key to quit\n")
 		bufio.NewReader(os.Stdin).ReadBytes('\n')
 		return
@@ -40,7 +40,7 @@ func main() {
 
 	// wasn't given demo file as argument
 	if len(os.Args) < 2 {
-		fmt.Printf("No .mvd2 file supplied as argument. Set this program as the default application for .mvd2 files.\n")
+		fmt.Printf("No .mvd2 or .dm2 file supplied as argument. Set this program as the default application for .mvd2 and .dm2 files.\n")
 		fmt.Printf("\n\nPress ENTER key to quit\n")
 		bufio.NewReader(os.Stdin).ReadBytes('\n')
 		return
@@ -78,7 +78,8 @@ func main() {
 	iferr(err)
 
 	// spawn a q2pro process to start playing the demo, block until completed
-	cmd := exec.Command(config.Q2exe, "+exec", "tempdemo.cfg")
+	q2binary := fmt.Sprintf("%s%s%s", config.Q2dir, sep, config.Q2exe)
+	cmd := exec.Command(q2binary, "+exec", "tempdemo.cfg")
 	err = cmd.Run()
 	iferr(err)
 
