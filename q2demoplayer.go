@@ -27,7 +27,7 @@ func main() {
 	if err != nil {
 		fmt.Printf("Problems loading config file: %s\n", configfile)
 		fmt.Println("Please make sure you create that file and add your config like:")
-		fmt.Printf("{\n  \"q2folder\": \"c:/q2/baseq2\",\n")
+		fmt.Printf("{\n  \"q2folder\": \"c:/q2\",\n")
 		fmt.Printf("  \"q2binary\": \"q2pro.exe\"\n}\n")
 		fmt.Printf("\n\nPress ENTER key to quit\n")
 		bufio.NewReader(os.Stdin).ReadBytes('\n')
