@@ -10,7 +10,7 @@ Before you can use this program, add the config file `q2demoplayer.json` to your
 Example config:
 ```
 {
-    "baseq2folder": "c:/q2",
+    "q2folder": "c:/q2",
     "q2binary": "q2pro.exe"
 }
 ```
